@@ -11,7 +11,7 @@ use App\Http\Requests\Admin\ResultRequest;
 
 class ResultController extends Controller
 {
-   
+
     public function index(): View
     {
         $results = Result::all();

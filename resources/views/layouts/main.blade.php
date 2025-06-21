@@ -114,31 +114,7 @@
                         </div>`
 
 
-                        {{-- @if (Auth::check())
-                            <div class="nav-item dropdown rounded-pill">
-                                <a class="nav-link dropdown-toggle text-white bg-success rounded-pill p-2"
-                                    href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    <!-- Menambahkan ikon user di samping nama -->
-                                    <i class="fas fa-user mr-2"></i>
-                                    <span class="d-none d-lg-inline text-white small">{{ auth()->user()->name }}</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('logout') }}"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                                    </li>
-                                </ul>
-                            </div>
 
-
-
-                            <!-- Form Logout untuk pengamanan -->
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                style="display: none;">
-                                @csrf
-                            </form>
-                        @endif --}}
 
                         @if (Auth::check())
                             <div class="nav-item dropdown">

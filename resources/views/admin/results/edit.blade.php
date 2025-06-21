@@ -19,7 +19,7 @@
             <div class="card-header">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">{{ __('edit result')}}</h1>
-                    <a href="{{ route('admin.results.index') }}" class="btn btn-primary btn-sm shadow-sm">{{ __('Go Back') }}</a>
+                    <a href="{{ route('admin.results.index') }}" class="btn btn-success btn-sm shadow-sm">{{ __('Go Back') }}</a>
                 </div>
             </div>
             <div class="card-body">
@@ -38,11 +38,11 @@
                         <label for="total_points">{{ __('total_points') }}</label>
                         <input type="number" class="form-control" id="total_points" placeholder="{{ __('total_points') }}" name="total_points" value="{{ old('total_points', $result->total_points) }}" />
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">{{ __('Save')}}</button>
+                    <button type="submit" class="btn btn-success btn-block">{{ __('Save')}}</button>
                 </form>
             </div>
         </div>
-    
+
 
     <!-- Content Row -->
 

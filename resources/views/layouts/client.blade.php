@@ -41,15 +41,7 @@
                         <a class="nav-link text-center" href="{{ route('admin.dashboard.index') }}">
                             {{ auth()->user()->name }}
                         </a>
-                        <a class="nav-link text-center"
-                            onclick="event.preventDefault();document.getElementById('logout-form').submit();"
-                            href="{{ route('logout') }}">
-                            Logout
-                        </a>
                     @endauth
-                    <form class="d-none" action="{{ route('logout') }}" id="logout-form" method="post">
-                        @csrf
-                    </form>
                 </h5>
             </div>
         </nav>

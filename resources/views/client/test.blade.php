@@ -111,7 +111,7 @@
     });
 
     let timer;
-    let timeRemaining = 1 * 5; // 30 menit dalam detik
+    let timeRemaining = 5 * 30; // 30 menit dalam detik
     const submitButton = document.getElementById('submitButton');
     const quizForm = document.getElementById('quizForm');
 

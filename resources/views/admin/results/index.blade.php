@@ -10,17 +10,8 @@
         <div class="card">
             <div class="card-header py-3 d-flex">
                 <h6 class="m-0 font-weight-bold text-primary">
-                    {{ __('result') }}
+                    {{ __('Hasil dari karyawan ') }}
                 </h6>
-                <h1>hapus bagian untuk membuat new result +</h1>
-                <div class="ml-auto">
-                    <a href="{{ route('admin.results.create') }}" class="btn btn-primary">
-                        <span class="icon text-white-50">
-                            <i class="fa fa-plus"></i>
-                        </span>
-                        <span class="text">{{ __('New result') }}</span>
-                    </a>
-                </div>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

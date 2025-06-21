@@ -2,21 +2,46 @@
 
 namespace App\Http\Controllers\Admin;
 
+use index;
+use App\Models\Category;
 use App\Models\Question;
+use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Admin\QuestionRequest;
-use App\Models\Category;
 
 class QuestionController extends Controller
 {
 
-    public function index(): View
+    public function index(Request $request)
     {
-        $questions = Question::all();
+        // $questions = Question::all();
 
-        return view('admin.questions.index', compact('questions'));
+        // return view('admin.questions.index', compact('questions'));
+
+
+        // Get all categories for the filter buttons
+        $categories = Category::all();
+
+        // Start with all questions
+        $questions = Question::with('category'); // Eager load the category
+
+        // Check if a category_id is present in the request
+        if ($request->has('category_id') && $request->category_id != '') {
+            $questions->where('category_id', $request->category_id);
+        }
+
+        // Get the filtered questions
+        $questions = $questions->get();
+
+        // If it's an AJAX request, return JSON
+        if ($request->ajax()) {
+            return response()->json($questions);
+        }
+
+        // Otherwise, return the view with data
+        return view('admin.questions.index', compact('questions', 'categories'));
     }
 
     public function create()

@@ -34,11 +34,11 @@
                 </div>
             </div>
 
-            <button type="button" id="add-option-btn" class="btn btn-secondary btn-sm mb-3">Add Option</button>
+            <button type="button" id="add-option-btn" class="btn btn-secondary btn-sm mb-3">Tambah Jawaban</button>
 
             <br>
 
-            <button type="submit" class="btn btn-primary">Save Question</button>
+            <button type="submit" class="btn btn-success">Simpan Soal dan Jawaban</button>
         </form>
     </div>
 

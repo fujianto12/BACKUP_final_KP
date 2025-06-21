@@ -1,10 +1,10 @@
-@extends('layouts.admin')
+{{-- @extends('layouts.admin')
 
 @section('content')
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    
+
 
     @if($errors->any())
         <div class="alert alert-danger">
@@ -43,9 +43,9 @@
                 </form>
             </div>
         </div>
-    
+
 
     <!-- Content Row -->
 
 </div>
-@endsection
+@endsection --}}

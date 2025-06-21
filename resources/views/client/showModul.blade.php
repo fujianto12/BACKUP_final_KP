@@ -23,13 +23,66 @@
             @endforeach
         </div>
 
-        <!-- Mulai Kuis Button -->
-        <div class="single-tags wow fadeInUp mx-5">
-            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#quizConfirmationModal">Mulai
-                Kuis</a>
+        {{-- Pesan error dari controller --}}
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show mx-5" role="alert">
+                {{ session('error') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        {{-- Informasi Percobaan Kuis --}}
+        <div class="quiz-info-section mx-5 mb-4">
+            @if ($quizAttempt) {{-- Pastikan objek $quizAttempt ada --}}
+                <p class="h5">
+                    <i class="fa fa-info-circle mr-2"></i>Percobaan Kuis Anda:
+                    <span class="badge badge-info">{{ $quizAttempt->attempts_left }} tersisa</span>
+                </p>
+
+                @if ($quizAttempt->last_attempt_at) {{-- Jika sudah pernah mencoba --}}
+                    @php
+                        // Menggunakan Carbon untuk perhitungan waktu
+                        $cooldownEndTime = $quizAttempt->last_attempt_at->addHours(1);
+                        $resetAllAttemptsTime = $quizAttempt->last_attempt_at->addHours(3);
+                        $now = Carbon\Carbon::now();
+                    @endphp
+
+                    @if ($quizAttempt->attempts_left > 0 && $now->lt($cooldownEndTime))
+                        {{-- Dalam masa cooldown 1 jam setelah percobaan terakhir --}}
+                        <p class="text-warning">
+                            <i class="fa fa-clock-o mr-1"></i>Anda baru saja melakukan percobaan. Silakan tunggu sekitar
+                            **{{ $now->diffForHumans($cooldownEndTime, true, false, 2) }}** lagi
+                            sebelum percobaan berikutnya.
+                        </p>
+                    @elseif ($quizAttempt->attempts_left <= 0 && $now->lt($resetAllAttemptsTime))
+                        {{-- Semua percobaan habis, menunggu reset 3 jam --}}
+                        <p class="text-danger">
+                            <i class="fa fa-ban mr-1"></i>Semua percobaan telah digunakan. Percobaan akan direset dalam sekitar
+                            **{{ $now->diffForHumans($resetAllAttemptsTime, true, false, 2) }}** lagi.
+                        </p>
+                    @elseif ($quizAttempt->attempts_left < 3 && $now->greaterThanOrEqualTo($cooldownEndTime))
+                        {{-- Bisa mencoba lagi setelah cooldown 1 jam, tapi belum 3 jam total --}}
+                        <p class="text-success">
+                            <i class="fa fa-check-circle-o mr-1"></i>Anda siap untuk percobaan berikutnya!
+                        </p>
+                    @endif
+                @else
+                    {{-- Belum pernah mencoba sama sekali --}}
+                    <p class="text-muted">
+                        <i class="fa fa-lightbulb-o mr-1"></i>Anda memiliki **3 percobaan** untuk kuis ini.
+                    </p>
+                @endif
+            @else
+                <p class="text-danger">Informasi percobaan kuis tidak tersedia.</p>
+            @endif
         </div>
 
-        <!-- Modal Konfirmasi Mulai Kuis -->
+        <div class="single-tags wow fadeInUp mx-5">
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#quizConfirmationModal">Mulai Kuis</a>
+        </div>
+
         <div class="modal fade" id="quizConfirmationModal" tabindex="-1" role="dialog"
             aria-labelledby="quizConfirmationModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">

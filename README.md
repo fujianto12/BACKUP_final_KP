@@ -1,4 +1,4 @@
-# Laravel 8 - Quiz Application
+<!-- # Laravel 8 - Quiz Application
 
 ## Screenshots
 
@@ -36,4 +36,4 @@ Go to the project directory
 #### Login
 
 -   email = admin@example.com
--   password = 123
+-   password = 123 -->

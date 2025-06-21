@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Module;
 use App\Models\Category;
+use App\Models\QuizAttempt;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class ModuleController extends Controller
 {
@@ -65,10 +67,26 @@ class ModuleController extends Controller
         Module::whereIn('id', $request->ids)->delete();
         return response()->noContent();
     }
-    public function show($id)
+    // public function show($id)
+    // {
+    //     $module = Module::findOrFail($id);
+    //     return view('client.showModul', compact('module'));
+    // }
+
+     // Contoh method yang menampilkan modul
+    public function show(Module $module) // Atau nama method lain yang Anda gunakan
     {
-        $module = Module::findOrFail($id);
-        return view('client.showModul', compact('module'));
+        $user = Auth::user(); // Dapatkan user yang sedang login
+
+        // Dapatkan atau buat record QuizAttempt untuk user dan kategori ini
+        // Menggunakan firstOrCreate untuk memastikan record selalu ada
+        $quizAttempt = QuizAttempt::firstOrCreate(
+            ['user_id' => $user->id, 'category_id' => $module->category->id],
+            ['attempts_left' => 3, 'last_attempt_at' => null] // Default jika baru dibuat
+        );
+
+        // Jangan lupa untuk melewatkan $quizAttempt ke view
+        return view('showmodul', compact('module', 'quizAttempt'));
     }
     public function storeMultiple(Request $request)
     {

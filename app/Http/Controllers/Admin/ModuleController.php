@@ -21,18 +21,27 @@ class ModuleController extends Controller
         return view('admin.modules.create', compact('categories'));
     }
 
-    public function store(Request $request)
+   public function store(Request $request)
     {
+        // Validasi input
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
+        // Menghapus tag HTML selain <p>, <br>, <b>, <i>, <strong>, <em>
+        $validated['content'] = strip_tags($validated['content'], '<p><br><b><i><strong><em>');
+
+        // Menambahkan tag <p> untuk setiap paragraf baru (jika diperlukan)
+        $validated['content'] = '<p>' . implode('</p><p>', explode("\n", $validated['content'])) . '</p>';
+
+        // Simpan ke database
         Module::create($validated);
 
         return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil ditambahkan');
     }
+
 
     public function edit(Module $module)
     {
@@ -40,14 +49,22 @@ class ModuleController extends Controller
         return view('admin.modules.edit', compact('module', 'categories'));
     }
 
-    public function update(Request $request, Module $module)
+     public function update(Request $request, Module $module)
     {
+        // Validasi input
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
+        // Menghapus tag HTML selain <p>, <br>, <b>, <i>, <strong>, <em>
+        $validated['content'] = strip_tags($validated['content'], '<p><br><b><i><strong><em>');
+
+        // Menambahkan tag <p> untuk setiap paragraf baru (jika diperlukan)
+        $validated['content'] = '<p>' . implode('</p><p>', explode("\n", $validated['content'])) . '</p>';
+
+        // Update data modul
         $module->update($validated);
 
         return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil diperbarui');

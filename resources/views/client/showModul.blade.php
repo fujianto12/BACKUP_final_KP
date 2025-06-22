@@ -11,22 +11,20 @@
             <h1 class="mb-4 text-center">{{ $module->category->name }}</h1>
             <hr>
 
-            @foreach ($module->category->modules as $modul)
-                <div class="single-content wow fadeInUp mb-5">
-                    @if ($modul->image)
-                        <img src="{{ asset('storage/' . $modul->image) }}" alt="{{ $modul->title }}" class="img-fluid mb-3" />
-                    @endif
-                    <h2>{{ $modul->title }}</h2>
-                    <div>{!! $modul->content !!}</div>
-                    <hr>
+            <div class="single-content wow fadeInUp mb-5">
+                @if ($module->image)
+                    <img src="{{ asset('storage/' . $module->image) }}" alt="{{ $module->title }}" class="img-fluid mb-3" />
+                @endif
+                <h2>{{ $module->title }}</h2>
+                <div class="modul-description">
+                    {!! $module->content !!}  <!-- Menampilkan konten dengan tag HTML yang sudah diproses -->
                 </div>
-            @endforeach
+                <hr>
+            </div>
         </div>
 
-        <!-- Mulai Kuis Button -->
         <div class="single-tags wow fadeInUp mx-5">
-            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#quizConfirmationModal">Mulai
-                Kuis</a>
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#quizConfirmationModal">Mulai Kuis</a>
         </div>
 
         <!-- Modal Konfirmasi Mulai Kuis -->

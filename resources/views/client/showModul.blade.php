@@ -27,7 +27,7 @@
             @foreach ($module->category->modules->where('id', '!=', $module->id) as $modul)
                 <div class="single-content wow fadeInUp mb-5">
                     <h3>{{ $modul->title }}</h3>
-                    <div class="modul-description">
+                    <div class="modul-description" style="text-align: justify">
                         {!! nl2br(e(strip_tags($modul->content, '<p><br><b><i><strong><em><ul><ol><li>'))) !!}
                     </div>
                     <hr>

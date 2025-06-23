@@ -31,10 +31,10 @@ class ModuleController extends Controller
         ]);
 
         // Menghapus tag HTML selain <p>, <br>, <b>, <i>, <strong>, <em>
-        $validated['content'] = strip_tags($validated['content'], '<p><br><b><i><strong><em>');
+        $validated['content'] = strip_tags($validated['content'], '<br><b><i><strong><em>');
 
         // Menambahkan tag <p> untuk setiap paragraf baru (jika diperlukan)
-        $validated['content'] = '<p>' . implode('</p><p>', explode("\n", $validated['content'])) . '</p>';
+        //$validated['content'] = '<p>' . implode('</p><p>', explode("\n", $validated['content'])) . '</p>';
 
         // Simpan ke database
         Module::create($validated);
@@ -50,25 +50,29 @@ class ModuleController extends Controller
     }
 
      public function update(Request $request, Module $module)
-    {
-        // Validasi input
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
+{
+    // Validasi input
+    $validated = $request->validate([
+        'category_id' => 'required|exists:categories,id',
+        'title' => 'required|string|max:255',
+        'content' => 'required|string', // Validasi konten teks
+    ]);
 
-        // Menghapus tag HTML selain <p>, <br>, <b>, <i>, <strong>, <em>
-        $validated['content'] = strip_tags($validated['content'], '<p><br><b><i><strong><em>');
+    // Menghapus tag HTML selain <br>, <b>, <i>, <strong>, <em>, <p> jika perlu
+    // Mengizinkan tag <br> untuk baris baru dan <p> untuk paragraf
+    $validated['content'] = strip_tags($validated['content'], '<br><b><i><strong><em><p>');
 
-        // Menambahkan tag <p> untuk setiap paragraf baru (jika diperlukan)
-        $validated['content'] = '<p>' . implode('</p><p>', explode("\n", $validated['content'])) . '</p>';
+    // Menambahkan tag <p> untuk setiap baris baru (optional)
+    // Jika konten mengandung baris baru (\n), kita bisa menambahkan tag <p> di sekitarnya
+    //$validated['content'] = '<p>' . implode('</p><p>', explode("\n", $validated['content'])) . '</p>';
 
-        // Update data modul
-        $module->update($validated);
+    // Update data modul
+    $module->update($validated);
 
-        return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil diperbarui');
-    }
+    // Kembali ke halaman daftar modul dengan pesan sukses
+    return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil diperbarui');
+}
+
 
     public function destroy(Module $module)
     {

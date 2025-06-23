@@ -11,20 +11,34 @@
             <h1 class="mb-4 text-center">{{ $module->category->name }}</h1>
             <hr>
 
+            <!-- Menampilkan modul yang dipilih -->
             <div class="single-content wow fadeInUp mb-5">
                 @if ($module->image)
                     <img src="{{ asset('storage/' . $module->image) }}" alt="{{ $module->title }}" class="img-fluid mb-3" />
                 @endif
                 <h2>{{ $module->title }}</h2>
                 <div class="modul-description">
-                    {!! $module->content !!}  <!-- Menampilkan konten dengan tag HTML yang sudah diproses -->
+                    {!! nl2br(e(strip_tags($module->content))) !!}
                 </div>
                 <hr>
             </div>
+
+            <!-- Menampilkan modul lain dalam kategori yang sama, kecuali modul yang sedang ditampilkan -->
+            @foreach ($module->category->modules->where('id', '!=', $module->id) as $modul)
+                <div class="single-content wow fadeInUp mb-5">
+                    <h3>{{ $modul->title }}</h3>
+                    <div class="modul-description">
+                        {!! nl2br(e(strip_tags($modul->content, '<p><br><b><i><strong><em><ul><ol><li>'))) !!}
+                    </div>
+                    <hr>
+                </div>
+            @endforeach
         </div>
 
+        <!-- Tombol Mulai Kuis -->
         <div class="single-tags wow fadeInUp mx-5">
-            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#quizConfirmationModal">Mulai Kuis</a>
+            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#quizConfirmationModal">Mulai
+                Kuis</a>
         </div>
 
         <!-- Modal Konfirmasi Mulai Kuis -->
@@ -49,6 +63,7 @@
             </div>
         </div>
 
+        <!-- Back to Top Button -->
         <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
     </div>
 @endsection

@@ -1292,6 +1292,7 @@ a:focus {
     background: #73EC8B;
 }
 /* CSS untuk menangani teks panjang */
+./* CSS untuk menangani teks panjang */
 .modul-content {
     word-wrap: break-word; /* Memastikan teks panjang terputus dan dibungkus */
     word-break: break-word; /* Memastikan kata-kata yang sangat panjang terputus dengan baik */
@@ -1300,6 +1301,7 @@ a:focus {
     width: 100%; /* Agar menyesuaikan dengan lebar halaman */
     padding: 10px; /* Menambahkan padding untuk ruang kosong */
     box-sizing: border-box; /* Menjamin padding dan margin tidak menyebabkan overflow */
+    overflow-wrap: break-word; /* Memastikan kata panjang dipotong dan dibungkus */
 }
 
 /* Memberikan jarak antar paragraf */
@@ -1309,6 +1311,11 @@ a:focus {
     line-height: 1.6;
     color: #333;
     text-align: justify;
+    word-wrap: break-word; /* Memastikan kata-kata panjang terpotong dengan baik */
+    white-space: normal;   /* Memastikan teks membungkus otomatis */
+    overflow: visible;     /* Menjamin teks yang panjang tidak terpotong */
+    width: 100%;           /* Memastikan elemen mengisi seluruh lebar */
+    max-width: 100%;
 }
 
 

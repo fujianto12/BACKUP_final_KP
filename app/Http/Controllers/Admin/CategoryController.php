@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\Admin\CategoryRequest;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -77,5 +78,18 @@ class CategoryController extends Controller
         Category::whereIn('id', request('ids'))->delete();
 
         return response()->noContent();
+    }
+
+    public function search(Request $request)
+    {
+        $term = $request->get('q');
+        $categories = \App\Models\Category::where('name', 'like', '%' . $term . '%')->get();
+
+        return response()->json($categories->map(function ($cat) {
+            return [
+                'id' => $cat->id,
+                'name' => $cat->name,
+            ];
+        }));
     }
 }

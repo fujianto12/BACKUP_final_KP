@@ -3,8 +3,8 @@ session_start();
 
 // Jika sudah login, langsung ke home
 if (isset($_SESSION['user_id'])) {
-    header("Location: home.php");
-    exit;
+    header('Location: home.php');
+    exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -14,14 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($username == 'admin' && $password == '123') {
         $_SESSION['user_id'] = $username;
-        header("Location: home.php");
-        exit;
+        header('Location: home.php');
+        exit();
     } else {
-        $error = "Username atau password salah!";
+        $error = 'Username atau password salah!';
     }
 }
 ?>
-<!-- resources/views/auth/loginregis.blade.php -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -59,40 +58,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
     <section class="forms-section">
-  <div class="wrapper">
-    <form action="{{ route('login') }}" method="POST">
-      @csrf
-      <h2>Login</h2>
+        <div class="wrapper">
+            <form action="{{ route('login') }}" method="POST">
+                @csrf
+                <h2>Login</h2>
 
-      @if ($errors->any())
-        <div class="form-error">
-          @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-          @endforeach
+                @if ($errors->any())
+                    <div class="form-error">
+                        @foreach ($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
+
+                <div class="input-field">
+                    <input type="text" name="email" placeholder="" value="{{ old('email') }}" required />
+                    <label>Enter your email</label>
+                </div>
+
+                <div class="input-field">
+                    <input type="password" name="password" class="pass-key" placeholder="" required />
+                    <label>Enter your password</label>
+                    <span class="toggle-pass" onclick="togglePassword()" aria-label="Toggle Password Visibility"
+                        role="button" tabindex="0"></span>
+                </div>
+                <button type="submit">Log In</button>
+
+                <div class="register">
+                    <p>Don't have an account? <a href="{{ route('register') }}">Register</a></p>
+                </div>
+            </form>
         </div>
-      @endif
-
-      <div class="input-field">
-        <input type="text" name="email" placeholder="" value="{{ old('email') }}" required />
-        <label>Enter your email</label>
-      </div>
-
-      <div class="input-field">
-        <input type="password" name="password" class="pass-key" placeholder="" required />
-        <label>Enter your password</label>
-        <span class="toggle-pass" onclick="togglePassword()" aria-label="Toggle Password Visibility"
-          role="button" tabindex="0"></span>
-      </div>
-
-
-      <button type="submit">Log In</button>
-
-      <div class="register">
-        <p><a href="{{ route('register') }}">Buat Akun Baru</a></p>
-      </div>
-    </form>
-  </div>
-</section>
+    </section>
 
 
     <!-- JavaScript Libraries -->
@@ -109,14 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
     </script>
-
-    <!-- Template Javascript -->
-
     <script src="{{ asset('js/loginregis.js') }}"></script>
-
-
-
-
 </body>
 
 </html>

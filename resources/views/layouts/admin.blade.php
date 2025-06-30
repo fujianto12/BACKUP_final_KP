@@ -75,9 +75,8 @@
                                     Logout
                                 </a>
 
-                                <a href="{{ route('profil') }}" class="dropdown-item">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i> <!-- Add icon here -->
-                                    Daftar Profil Yang Sudah Masuk
+                                <a class="dropdown-item" href="{{ route('admin.profile.index') }}">
+                                    <i class="fas fa-users mr-2 text-primary"></i> Cek Daftar Karyawan
                                 </a>
 
                                 <form id="logout-form" action="{{ route('logout') }}" method="post">
@@ -179,32 +178,106 @@
     <script src="https://cdn.datatables.net/select/1.3.0/js/dataTables.select.min.js"></script>
 
     <script>
+        $(document).ready(function() {
+            // Live search kategori
+            $('#category_name').on('keyup', function() {
+                let query = $(this).val();
+
+                if (query.length >= 2) {
+                    $.ajax({
+                        url: "{{ route('admin.categories.search') }}",
+                        type: "GET",
+                        data: {
+                            q: query
+                        },
+                        success: function(data) {
+                            let list = $('#categoryList');
+                            list.empty();
+
+                            if (data.length > 0) {
+                                data.forEach(function(item) {
+                                    list.append(
+                                        `<a href="#" class="list-group-item list-group-item-action" data-id="${item.id}">${item.name}</a>`
+                                    );
+                                });
+                                list.show();
+                            } else {
+                                list.html('<div class="list-group-item">Tidak ditemukan</div>')
+                                    .show();
+                            }
+                        }
+                    });
+                } else {
+                    $('#categoryList').hide();
+                }
+            });
+
+            // Saat klik salah satu kategori
+            $(document).on('click', '#categoryList a', function(e) {
+                e.preventDefault();
+                $('#category_name').val($(this).text());
+                $('#category_id').val($(this).data('id'));
+                $('#categoryList').hide();
+            });
+
+            // Tutup dropdown jika klik di luar
+            $(document).click(function(e) {
+                if (!$(e.target).closest('#category_name, #categoryList').length) {
+                    $('#categoryList').hide();
+                }
+            });
+
+            // Tambah pilihan jawaban
+            $('#add-option-btn').on('click', function() {
+                const wrapper = $('#options-wrapper');
+
+                const html = `
+            <div class="option-item mb-3">
+                <input type="text" name="options[]" class="form-control mb-1" placeholder="Option text" required>
+                <input type="number" name="points[]" class="form-control" placeholder="Points" required min="0" value="0">
+                <button type="button" class="btn btn-danger btn-sm mt-1 remove-option-btn">Remove</button>
+            </div>
+        `;
+
+                wrapper.append(html);
+            });
+
+            // Hapus pilihan jawaban
+            $(document).on('click', '.remove-option-btn', function() {
+                $(this).closest('.option-item').remove();
+            });
+        });
+
         $(function() {
-            let copyButtonTrans = 'copy'
-            let csvButtonTrans = 'csv'
-            let excelButtonTrans = 'excel'
-            let pdfButtonTrans = 'pdf'
-            let printButtonTrans = 'print'
-            let colvisButtonTrans = 'Column visibility'
+            let copyButtonTrans = 'copy';
+            let csvButtonTrans = 'csv';
+            let excelButtonTrans = 'excel';
+            let pdfButtonTrans = 'pdf';
+            let printButtonTrans = 'print';
+            let colvisButtonTrans = 'Column visibility';
             let languages = {
                 'en': 'https://cdn.datatables.net/plug-ins/1.10.19/i18n/English.json'
             };
+
             $.extend(true, $.fn.dataTable.Buttons.defaults.dom.button, {
                 className: 'btn'
-            })
+            });
+
             $.extend(true, $.fn.dataTable.defaults, {
                 language: {
                     url: languages['{{ app()->getLocale() }}']
                 },
                 columnDefs: [{
-                    orderable: false,
-                    className: 'select-checkbox',
-                    targets: 0
-                }, {
-                    orderable: false,
-                    searchable: false,
-                    targets: -1
-                }],
+                        orderable: false,
+                        className: 'select-checkbox',
+                        targets: 0
+                    },
+                    {
+                        orderable: false,
+                        searchable: false,
+                        targets: -1
+                    }
+                ],
                 select: {
                     style: 'multi+shift',
                     selector: 'td:first-child'
@@ -213,24 +286,7 @@
                 scrollX: true,
                 pageLength: 100,
                 dom: 'lBfrtip<"actions">',
-                buttons: [
-                    // {
-                    //     extend: 'copy',
-                    //     className: 'btn-outline-secondary mx-2',
-                    //     text: copyButtonTrans,
-                    //     exportOptions: {
-                    //         columns: ':visible'
-                    //     }
-                    // },
-                    // {
-                    //     extend: 'csv',
-                    //     className: 'btn-outline-secondary mx-2',
-                    //     text: csvButtonTrans,
-                    //     exportOptions: {
-                    //         columns: ':visible'
-                    //     }
-                    // },
-                    {
+                buttons: [{
                         extend: 'excel',
                         className: 'btn-outline-secondary mx-2',
                         text: excelButtonTrans,
@@ -245,25 +301,16 @@
                         exportOptions: {
                             columns: ':visible'
                         }
-                    },
-                    // {
-                    //     extend: 'print',
-                    //     className: 'btn-outline-secondary mx-2',
-                    //     text: printButtonTrans,
-                    //     exportOptions: {
-                    //         columns: ':visible'
-                    //     }
-                    // },
+                    }
                 ]
             });
+
             $.fn.dataTable.ext.classes.sPageButton = '';
         });
     </script>
     @stack('script-alt')
     @stack('scripts')
-    <!-- Page level custom scripts -->
-    <!-- <script src="{{ asset('backend/js/demo/chart-area-demo.js') }}"></script>
-    <script src="{{ asset('backend/js/demo/chart-pie-demo.js') }}"></script> -->
+    <script src="{{ asset('backend/js/demo/chart-pie-demo.js') }}"></script>
 
 </body>
 

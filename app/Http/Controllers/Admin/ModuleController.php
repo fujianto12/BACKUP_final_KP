@@ -11,32 +11,28 @@ class ModuleController extends Controller
 {
     public function index()
     {
-        $categories = Category::with('modules')->get(); // ambil kategori beserta modulnya
+        $categories = Category::with('modules')->get();
         return view('admin.modules.index', compact('categories'));
     }
 
     public function create()
     {
         $categories = Category::all();
+        $currentCategory = null;
+
         return view('admin.modules.create', compact('categories'));
     }
 
-   public function store(Request $request)
+    public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
-        // Menghapus tag HTML selain <p>, <br>, <b>, <i>, <strong>, <em>
         $validated['content'] = strip_tags($validated['content'], '<br><b><i><strong><em>');
 
-        // Menambahkan tag <p> untuk setiap paragraf baru (jika diperlukan)
-        //$validated['content'] = '<p>' . implode('</p><p>', explode("\n", $validated['content'])) . '</p>';
-
-        // Simpan ke database
         Module::create($validated);
 
         return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil ditambahkan');
@@ -46,32 +42,24 @@ class ModuleController extends Controller
     public function edit(Module $module)
     {
         $categories = Category::all();
-        return view('admin.modules.edit', compact('module', 'categories'));
+        $currentCategory = $module->category;
+
+        return view('admin.modules.edit', compact('module', 'categories','currentCategory'));
     }
 
-     public function update(Request $request, Module $module)
-{
-    // Validasi input
-    $validated = $request->validate([
-        'category_id' => 'required|exists:categories,id',
-        'title' => 'required|string|max:255',
-        'content' => 'required|string', // Validasi konten teks
-    ]);
+    public function update(Request $request, Module $module)
+    {
+        $validated = $request->validate([
+            'category_id' => 'required|exists:categories,id',
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
 
-    // Menghapus tag HTML selain <br>, <b>, <i>, <strong>, <em>, <p> jika perlu
-    // Mengizinkan tag <br> untuk baris baru dan <p> untuk paragraf
-    $validated['content'] = strip_tags($validated['content'], '<br><b><i><strong><em><p>');
+        $validated['content'] = strip_tags($validated['content'], '<br><b><i><strong><em><p>');
+        $module->update($validated);
 
-    // Menambahkan tag <p> untuk setiap baris baru (optional)
-    // Jika konten mengandung baris baru (\n), kita bisa menambahkan tag <p> di sekitarnya
-    //$validated['content'] = '<p>' . implode('</p><p>', explode("\n", $validated['content'])) . '</p>';
-
-    // Update data modul
-    $module->update($validated);
-
-    // Kembali ke halaman daftar modul dengan pesan sukses
-    return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil diperbarui');
-}
+        return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil diperbarui');
+    }
 
 
     public function destroy(Module $module)
@@ -120,7 +108,7 @@ class ModuleController extends Controller
 
         $category = $module->category;
 
-        $firstCategories = Category::first(); // contoh ambil kategori pertama, sesuaikan logika Anda
+        $firstCategories = Category::first();
 
         return view('client.showModul', compact('module', 'category', 'firstCategories'));
     }

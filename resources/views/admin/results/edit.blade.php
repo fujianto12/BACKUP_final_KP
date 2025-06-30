@@ -19,7 +19,7 @@
             <div class="card-header">
                 <div class="d-sm-flex align-items-center justify-content-between mb-4">
                     <h1 class="h3 mb-0 text-gray-800">{{ __('edit result')}}</h1>
-                    <a href="{{ route('admin.results.index') }}" class="btn btn-success btn-sm shadow-sm">{{ __('Go Back') }}</a>
+                    <a href="{{ route('admin.results.index') }}" class="btn btn-success btn-sm shadow-sm">{{ __('Kembali') }}</a>
                 </div>
             </div>
             <div class="card-body">

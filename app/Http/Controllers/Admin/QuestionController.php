@@ -16,11 +16,6 @@ class QuestionController extends Controller
 
     public function index(Request $request)
     {
-        // $questions = Question::all();
-
-        // return view('admin.questions.index', compact('questions'));
-
-
         // Get all categories for the filter buttons
         $categories = Category::all();
 
@@ -47,6 +42,8 @@ class QuestionController extends Controller
     public function create()
     {
         $categories = Category::pluck('name', 'id');
+        $currentCategory = null;
+
         return view('admin.questions.create', compact('categories'));
     }
 
@@ -83,8 +80,10 @@ class QuestionController extends Controller
 
         // Ambil semua opsi yang terkait dengan question ini (id dan option_text)
         $options = $question->options()->pluck('option_text', 'id');
+        $currentCategory = $question->category;
 
-        return view('admin.questions.edit', compact('question', 'categories', 'options'));
+
+        return view('admin.questions.edit', compact('question', 'categories', 'options','currentCategory'));
     }
 
 

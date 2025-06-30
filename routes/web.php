@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -57,7 +58,7 @@ Route::get('/visimisi', function () {
 
 Route::group(['middleware' => ['auth', 'no-cache']], function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+    // Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
     // Route::get('test', [\App\Http\Controllers\TestController::class, 'index'])->name('client.test');
     // Route::post('test', [\App\Http\Controllers\TestController::class, 'store'])->name('client.test.store');
     Route::get('results/{result_id}', [\App\Http\Controllers\ResultController::class, 'show'])->name('client.results.show');
@@ -70,7 +71,7 @@ Route::group(['middleware' => ['auth', 'no-cache']], function () {
     Route::post('/test/{category}', [TestController::class, 'storeAnswers'])->name('client.test.store');
 
     // Route::get('/profil', [UserController::class, 'showProfile'])->name('profil');
-    Route::get('/profil', [UserController::class, 'showProfile'])->middleware('auth')->name('profil');
+    // Route::get('/profil', [UserController::class, 'showProfile'])->middleware('auth')->name('profil');
 
 
 
@@ -107,6 +108,18 @@ Route::group(['middleware' => ['auth', 'no-cache']], function () {
         Route::resource('modules', \App\Http\Controllers\Admin\ModuleController::class);
         Route::delete('modules_mass_destroy', [\App\Http\Controllers\Admin\ModuleController::class, 'massDestroy'])->name('modules.mass_destroy');
         Route::post('modules/store-multiple', [\App\Http\Controllers\Admin\ModuleController::class, 'storeMultiple'])->name('modules.storeMultiple');
+
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+        Route::delete('/profile/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+        Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
+        Route::get('/create', [ProfileController::class, 'create'])->name('profile.create');
+        Route::post('/', [ProfileController::class, 'store'])->name('profile.store');
+        Route::delete('/{id}', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+        Route::get('/admin/categories/search', [CategoryController::class, 'search'])->name('categories.search');
+
     });
 });
 
@@ -114,21 +127,14 @@ Route::group(['middleware' => ['auth', 'no-cache']], function () {
 Route::middleware(['guest', 'no-cache'])->group(function () {
     Route::get('login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [\App\Http\Controllers\Auth\LoginController::class, 'login']);
-    Route::get('register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
-    Route::post('register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
+    // Route::get('register', [\App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+    // Route::post('register', [\App\Http\Controllers\Auth\RegisterController::class, 'register']);
+
 });
 
 
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    // Halaman dashboard admin
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
 
-    // Resource user (controller UserController)
-    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
-});
 
 
 Auth::routes();

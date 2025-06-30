@@ -9,8 +9,8 @@
         <!-- Content Row -->
         <div class="card">
             <div class="card-header py-3 d-flex">
-                <h6 class="m-0 font-weight-bold text-primary">
-                    {{ __('Hasil dari karyawan ') }}
+                <h6 class="m-0 font-weight-bold text-success">
+                    {{ __('Hasil Kuis Dari Karyawan ') }}
                 </h6>
             </div>
             <div class="card-body">

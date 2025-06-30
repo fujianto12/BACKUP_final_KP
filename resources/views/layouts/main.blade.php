@@ -156,7 +156,7 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary text-dark"
                                             data-bs-dismiss="modal">Tidak</button>
-                                            <h1>|</h1>
+                                        <h1>|</h1>
                                         <button type="button" class="btn btn-danger text-dark"
                                             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Ya</button>
                                     </div>

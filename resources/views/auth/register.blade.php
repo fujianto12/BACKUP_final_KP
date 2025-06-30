@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <title>{{ config('app.name', 'Laravel') }}</title>
@@ -26,58 +26,80 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous" />
 
-    <!-- Template Stylesheet -->
+    <!-- Custom Stylesheet -->
     <link href="{{ asset('css/loginregis.css') }}" rel="stylesheet" />
+    <style>
+        /* Tambahan agar error message berwarna merah */
+        .invalid-feedback {
+            display: block;
+            color: #dc3545;
+            /* merah bootstrap */
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+    </style>
 </head>
 
 <body>
- <section class="forms-section">
-  <div class="wrapper">
-    <form action="{{ route('register') }}" method="POST">
-      @csrf
-      <h2>Register</h2>
+    <div class="bg-img">
+        <div class="wrapper">
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
+                <fieldset>
 
-      @if ($errors->any())
-        <div class="form-error">
-          @foreach ($errors->all() as $error)
-            <p>{{ $error }}</p>
-          @endforeach
+                    <h2>Register</h2>
+                    <div class="input-field">
+                        <input id="name" type="text" class="@error('name') is-invalid @enderror" name="name"
+                            value="{{ old('name') }}" required autocomplete="name" autofocus>
+
+                        @error('name')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <label for="name">{{ __('Name') }}</label>
+
+                    </div>
+                    <div class="input-field">
+                        <input id="email" type="email" class="@error('email') is-invalid @enderror" name="email"
+                            value="{{ old('email') }}" required autocomplete="email">
+
+                        @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <label for="email">{{ __('Email Address') }}</label>
+
+
+
+                    </div>
+                    <div class="input-field">
+                        <input id="password" type="password" class=" @error('password') is-invalid @enderror"
+                            name="password" required autocomplete="new-password">
+
+                        @error('password')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                        <label for="password">{{ __('Password') }}</label>
+
+                    </div>
+                    <div class="input-field">
+                        <input id="password-confirm" type="password" name="password_confirmation" required
+                            autocomplete="new-password">
+                        <label for="password-confirm">{{ __('Confirm Password') }}</label>
+
+                    </div>
+                </fieldset>
+                <button type="submit">{{ __('register') }}</button>
+                <div class="register">
+                    <p>Kembali ke <a href="{{ route('login') }}">Login</a></p>
+                </div>
+            </form>
         </div>
-      @endif
-
-      <div class="input-field">
-        <input type="text" name="name" placeholder=" " value="{{ old('name') }}"  />
-        <label>Full Name</label>
-      </div>
-
-      <div class="input-field">
-        <input type="email" name="email" placeholder=" " value="{{ old('email') }}"  />
-        <label>Email</label>
-      </div>
-
-      <div class="input-field">
-        <input type="password" name="password" class="pass-key" placeholder=" "  />
-        <label>Enter your password</label>
-        <span class="toggle-pass" onclick="togglePassword()" aria-label="Toggle Password Visibility"
-          role="button" tabindex="0">&#128065;</span>
-      </div>
-
-      <div class="input-field">
-        <input type="password" name="password_confirmation" class="pass-key" placeholder=" "  />
-        <label>Confirm Password</label>
-      </div>
-
-      <button type="submit">Register</button>
-
-      <div class="register">
-        <p><a href="{{ route('login') }}">Kembali ke halaman login</a></p>
-      </div>
-    </form>
-  </div>
-</section>
-
-
-
+    </div>
 
     <!-- JavaScript Libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -94,8 +116,23 @@
         integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
     </script>
 
-    <!-- Template Javascript -->
+    <!-- Custom JavaScript -->
     <script src="{{ asset('js/loginregis.js') }}"></script>
+
+    <script>
+        // Fungsi toggle show password (sesuaikan jika sudah ada di loginregis.js)
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const showText = document.querySelector('.show');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showText.textContent = 'HIDE';
+            } else {
+                passwordInput.type = 'password';
+                showText.textContent = 'SHOW';
+            }
+        }
+    </script>
 </body>
 
 </html>

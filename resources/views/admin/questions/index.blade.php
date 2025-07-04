@@ -18,12 +18,21 @@
                 </div>
             </div>
             <div class="card-body">
-                {{-- Category Filters --}}
+                {{-- Pesan Sukses (Alert) --}}
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+                {{-- Filter Kategori --}}
                 <div class="mb-4">
                     <h6 class="font-weight-bold text-primary mb-2">Filter Kategori:</h6>
-                    <button class="btn btn-outline-primary btn-sm category-filter-btn" data-category-id="">All Categories</button>
-                    @foreach($categories as $category)
-                        <button class="btn btn-outline-primary btn-sm category-filter-btn" data-category-id="{{ $category->id }}">{{ $category->name }}</button>
+                    <button class="btn btn-outline-primary btn-sm category-filter-btn" data-category-id="">All
+                        Categories</button>
+                    @foreach ($categories as $category)
+                        <button class="btn btn-outline-primary btn-sm category-filter-btn"
+                            data-category-id="{{ $category->id }}">{{ $category->subDivision }}</button>
                     @endforeach
                 </div>
                 {{-- End Category Filters --}}
@@ -33,9 +42,7 @@
                         cellspacing="0" width="100%">
                         <thead>
                             <tr>
-                                <th width="10">
-
-                                </th>
+                                <th width="10"></th>
                                 <th>No</th>
                                 <th>Category</th>
                                 <th>Question Text</th>
@@ -48,7 +55,7 @@
                                 <tr data-entry-id="{{ $question->id }}">
                                     <td></td>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $question->category->name ?? 'N/A' }}</td> {{-- Added 'N/A' for robustness --}}
+                                    <td>{{ $question->category->subDivision ?? 'N/A' }}</td>
                                     <td>{{ $question->question_text }}</td>
                                     <td>
                                         <a href="{{ route('admin.detailsoal.index', $question->id) }}"
@@ -57,22 +64,48 @@
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ route('admin.questions.edit', $question->id) }}"
-                                                class="btn btn-info">
-                                                <i class="fa fa-pencil-alt"></i>
+                                                class="btn btn-warning">
+                                                <i class="fa fa-edit"></i> Edit
                                             </a>
-                                            <form onclick="return confirm('Are you sure you want to delete this item?')" class="d-inline"
-                                                action="{{ route('admin.questions.destroy', $question->id) }}"
-                                                method="POST">
-                                                @csrf
-                                                @method('delete')
-                                                <button class="btn btn-danger"
-                                                    style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
+
+                                            {{-- Tombol Hapus yang mengaktifkan Modal --}}
+                                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                data-target="#deleteModal{{ $question->id }}">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
+
+                                {{-- Modal Konfirmasi Hapus --}}
+                                <div class="modal fade" id="deleteModal{{ $question->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus Soal</h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
+                                                    aria-label="Tutup">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah kamu yakin ingin menghapus soal ini?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <!-- Form Penghapusan -->
+                                                <form action="{{ route('admin.questions.destroy', $question->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @empty
                                 <tr>
                                     <td colspan="7" class="text-center">{{ __('Data Empty') }}</td>
@@ -84,13 +117,13 @@
                 </div>
             </div>
         </div>
-        </div>
+    </div>
 @endsection
 
 @push('script-alt')
     <script>
         $(function() {
-            let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
+            let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons);
             let deleteButton = {
                 text: '<i class="fa fa-trash"></i> <span class="ml-1">Hapus</span>',
                 url: "{{ route('admin.questions.mass_destroy') }}",
@@ -99,11 +132,11 @@
                     var ids = $.map(dt.rows({
                         selected: true
                     }).nodes(), function(entry) {
-                        return $(entry).data('entry-id')
+                        return $(entry).data('entry-id');
                     });
                     if (ids.length === 0) {
-                        alert('No rows selected.')
-                        return
+                        alert('No rows selected.');
+                        return;
                     }
                     if (confirm('Are you sure you want to delete these items?')) {
                         $.ajax({
@@ -118,12 +151,12 @@
                                 }
                             })
                             .done(function() {
-                                location.reload()
-                            })
+                                location.reload();
+                            });
                     }
                 }
             }
-            dtButtons.push(deleteButton)
+            dtButtons.push(deleteButton);
 
             let table = $('.datatable-question:not(.ajaxTable)').DataTable({
                 buttons: dtButtons,
@@ -131,8 +164,6 @@
                     [1, 'asc']
                 ],
                 pageLength: 50,
-                // Make sure to destroy the existing DataTable instance before reinitializing
-                // This is crucial for dynamic data loading
                 destroy: true
             });
 
@@ -148,56 +179,51 @@
             });
 
             function filterQuestions(categoryId) {
-                let url = "{{ route('admin.questions.index') }}"; // Base URL for questions
-
+                let url = "{{ route('admin.questions.index') }}";
                 if (categoryId) {
-                    url = `${url}?category_id=${categoryId}`; // Add category_id to URL if selected
+                    url += `?category_id=${categoryId}`;
                 }
 
                 $.ajax({
                     url: url,
                     method: 'GET',
                     success: function(data) {
-                        // Clear existing rows
                         table.clear().draw();
 
-                        // Add new rows based on filtered data
                         if (data.length > 0) {
-                            $.each(data, function(index, question) {
+                            data.forEach(function(question, index) {
+                                const categoryName = question.category?.subDivision ?? 'N/A';
+
                                 table.row.add([
-                                    '', // Empty for the checkbox column if you have one
+                                    '',
                                     index + 1,
-                                    question.category ? question.category.name : 'N/A',
+                                    categoryName,
                                     question.question_text,
                                     `<a href="/admin/detailsoal/${question.id}" class="btn btn-success">Lihat Detail Soal</a>`,
                                     `<div class="btn-group btn-group-sm">
-                                        <a href="/admin/questions/${question.id}/edit" class="btn btn-info">
-                                            <i class="fa fa-pencil-alt"></i>
-                                        </a>
-                                        <form onclick="return confirm('Are you sure you want to delete this item?')" class="d-inline"
-                                            action="/admin/questions/${question.id}" method="POST">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input type="hidden" name="_method" value="DELETE">
-                                            <button class="btn btn-danger" style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>`
+                            <a href="/admin/questions/${question.id}/edit" class="btn btn-warning">
+                                <i class="fa fa-edit"></i> Edit
+                            </a>
+                            <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal${question.id}">
+                                <i class="fa fa-trash"></i> Hapus
+                            </button>
+                        </div>`
                                 ]).draw(false);
                             });
                         } else {
-                            // If no data, add a row indicating empty data
                             table.row.add([
-                                '', '', '', '', '', '<td colspan="7" class="text-center">{{ __("Data Empty") }}</td>'
+                                '', '', '', '', '',
+                                `<td colspan="6" class="text-center">Data Empty</td>`
                             ]).draw(false);
                         }
                     },
                     error: function(xhr, status, error) {
                         console.error("Error fetching filtered questions:", error);
-                        alert("Failed to load questions. Please try again.");
+                        alert("Gagal memuat data. Silakan coba lagi.");
                     }
                 });
             }
+
         });
     </script>
 @endpush

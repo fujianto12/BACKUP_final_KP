@@ -41,7 +41,10 @@ class QuestionController extends Controller
 
     public function create()
     {
-        $categories = Category::pluck('name', 'id');
+        // $categories = Category::pluck('name', 'id');
+        // $subDivisions = Category::select('subDivision')->distinct()->pluck('subDivision');
+        $categories = Category::pluck('subDivision', 'id');
+
         $currentCategory = null;
 
         return view('admin.questions.create', compact('categories'));
@@ -74,18 +77,31 @@ class QuestionController extends Controller
         return view('admin.questions.show', compact('question'));
     }
 
+    // public function edit(Question $question): View
+    // {
+    //     // $categories = Category::all()->pluck('name', 'id');
+    //     // $subDivisions = Category::select('subDivision')->distinct()->pluck('subDivision');
+    //     $categories = Category::pluck('subDivision', 'id');
+
+
+    //     // Ambil semua opsi yang terkait dengan question ini (id dan option_text)
+    //     $options = $question->options()->pluck('option_text', 'id');
+    //     $currentCategory = $question->category;
+
+
+    //     return view('admin.questions.edit', compact('question', 'categories', 'options', 'currentCategory'));
+    // }
+
     public function edit(Question $question): View
     {
-        $categories = Category::all()->pluck('name', 'id');
+        $categories = Category::pluck('subDivision', 'id'); // ✅ tambahkan ini
 
-        // Ambil semua opsi yang terkait dengan question ini (id dan option_text)
+        $subDivisions = Category::select('subDivision')->distinct()->pluck('subDivision');
         $options = $question->options()->pluck('option_text', 'id');
         $currentCategory = $question->category;
 
-
-        return view('admin.questions.edit', compact('question', 'categories', 'options','currentCategory'));
+        return view('admin.questions.edit', compact('question', 'categories', 'options', 'currentCategory'));
     }
-
 
     public function update(QuestionRequest $request, Question $question): RedirectResponse
     {
@@ -169,5 +185,14 @@ class QuestionController extends Controller
     {
         $question = Question::with('options')->findOrFail($id);
         return view('admin.questions.detailsoal.index', compact('question'));
+    }
+
+    public function rules(): array
+    {
+        return [
+            'question_text' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            // ...tambahkan rules untuk options jika ada
+        ];
     }
 }

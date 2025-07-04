@@ -11,9 +11,9 @@
             @method('PUT')
 
             <div class="form-group">
-                <label for="category_name">Ubah Nama Kategori</label>
+                <label for="category_name">Ubah Sub Division</label>
                 <input type="text" id="category_name" class="form-control" placeholder="Cari kategori..."
-                    value="{{ old('category_name', isset($currentCategory) ? $currentCategory->name : '') }}"
+                    value="{{ old('category_name', isset($currentCategory) ? $currentCategory->subDivision : '') }}"
                     autocomplete="off" required>
                 <input type="hidden" name="category_id" id="category_id"
                     value="{{ old('category_id', isset($currentCategory) ? $currentCategory->id : '') }}">

@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Modul: ' . $module->category->name)
+@section('title', 'Modul: ' . $module->category->subDivision)
 
 @section('content')
     <div class="wrapper">
@@ -8,14 +8,11 @@
             <i class="fa fa-arrow-left fa-2x wow fadeInRight mb-4">Kembali</i>
         </a>
         <div class="single container">
-            <h1 class="mb-4 text-center">{{ $module->category->name }}</h1>
+            <h1 class="mb-4 text-center">{{ $module->category->subDivision }}</h1>
             <hr>
 
             <!-- Menampilkan modul yang dipilih -->
             <div class="single-content wow fadeInUp mb-5">
-                @if ($module->image)
-                    <img src="{{ asset('storage/' . $module->image) }}" alt="{{ $module->title }}" class="img-fluid mb-3" />
-                @endif
                 <h2>{{ $module->title }}</h2>
                 <div class="modul-description">
                     {!! nl2br(e(strip_tags($module->content))) !!}

@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\QuestionController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PermissionController;
+use App\Http\Controllers\ClassModelController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +64,8 @@ Route::group(['middleware' => ['auth', 'no-cache']], function () {
     // Route::post('test', [\App\Http\Controllers\TestController::class, 'store'])->name('client.test.store');
     Route::get('results/{result_id}', [\App\Http\Controllers\ResultController::class, 'show'])->name('client.results.show');
     Route::get('selflearning', [\App\Http\Controllers\SelfLearningController::class, 'index'])->name('selflearning.index');
+    Route::get('selflearning/{division}', [SelfLearningController::class, 'showSubdivisions'])->name('selflearning.subdivisions');
+
     Route::get('modules/{id}', [\App\Http\Controllers\Admin\ModuleController::class, 'show'])->name('modules.show');
 
 
@@ -120,9 +123,13 @@ Route::group(['middleware' => ['auth', 'no-cache']], function () {
 
         Route::get('/admin/categories/search', [CategoryController::class, 'search'])->name('categories.search');
 
+        // Route::get('/kelasperkategori', [ClassModelController::class, 'index'])->name('classes.index');
+        // Route::resource('kelasperkategori', \App\Http\Controllers\Admin\ClassModelController::class);
+
+
+
     });
 });
-
 
 Route::middleware(['guest', 'no-cache'])->group(function () {
     Route::get('login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');

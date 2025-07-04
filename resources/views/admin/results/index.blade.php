@@ -5,7 +5,6 @@
 
         <!-- Page Heading -->
 
-
         <!-- Content Row -->
         <div class="card">
             <div class="card-header py-3 d-flex">
@@ -19,54 +18,71 @@
                         width="100%">
                         <thead>
                             <tr>
-                                <th width="10">
-
-                                </th>
+                                <th width="10"></th>
                                 <th>No</th>
                                 <th>User</th>
                                 <th>Points</th>
-                                <th>Questions</th>
+                                {{-- <th>Questions</th> --}}
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($results as $result)
                                 <tr data-entry-id="{{ $result->id }}">
-                                    <td>
-
-                                    </td>
+                                    <td></td>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $result->user->name }}</td>
                                     <td>{{ $result->total_points }}</td>
-                                    <td>
+                                    {{-- <td>
                                         @foreach ($result->questions as $key => $question)
                                             <span class="badge badge-info">{{ $question->question_text }}</span>
                                         @endforeach
-                                    </td>
+                                    </td> --}}
                                     <td>
                                         <div class="btn-group btn-group-sm">
                                             <a href="{{ route('admin.results.show', $result->id) }}"
                                                 class="btn btn-success">
-                                                <i class="fa fa-eye"></i>
+                                                <i>Detail Jawaban</i>
                                             </a>
-                                            <a href="{{ route('admin.results.edit', $result->id) }}" class="btn btn-info">
-                                                <i class="fa fa-pencil-alt"></i>
-                                            </a>
-                                            <form onclick="return confirm('are you sure ? ')" class="d-inline"
-                                                action="{{ route('admin.results.destroy', $result->id) }}" method="POST">
-                                                @csrf
-                                                @method('delete')
-                                                <button class="btn btn-danger"
-                                                    style="border-top-left-radius: 0;border-bottom-left-radius: 0;">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
+                                            <!-- Tombol Hapus -->
+                                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                                data-target="#deleteModal{{ $result->id }}">
+                                                <i>Hapus</i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
+
+                                <!-- Modal Konfirmasi Hapus -->
+                                <div class="modal fade" id="deleteModal{{ $result->id }}" tabindex="-1" role="dialog"
+                                    aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-danger text-white">
+                                                <h5 class="modal-title" id="deleteModalLabel">Konfirmasi Hapus Hasil Kuis</h5>
+                                                <button type="button" class="close text-white" data-dismiss="modal"
+                                                    aria-label="Tutup">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Apakah kamu yakin ingin menghapus hasil kuis berikut?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <!-- Form Penghapusan -->
+                                                <form action="{{ route('admin.results.destroy', $result->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">{{ __('Data Empty') }}</td>
+                                    <td colspan="5" class="text-center">{{ __('Data Empty') }}</td>
                                 </tr>
                             @endforelse
                         </tbody>

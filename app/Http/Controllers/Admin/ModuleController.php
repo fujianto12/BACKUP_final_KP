@@ -23,20 +23,20 @@ class ModuleController extends Controller
         return view('admin.modules.create', compact('categories'));
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
-            'content' => 'required|string',
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $validated = $request->validate([
+    //         'category_id' => 'required|exists:categories,id',
+    //         'title' => 'required|string|max:255',
+    //         'content' => 'required|string',
+    //     ]);
 
-        $validated['content'] = strip_tags($validated['content'], '<br><b><i><strong><em>');
+    //     $validated['content'] = strip_tags($validated['content'], '<br><b><i><strong><em>');
 
-        Module::create($validated);
+    //     Module::create($validated);
 
-        return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil ditambahkan');
-    }
+    //     return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil ditambahkan');
+    // }
 
 
     public function edit(Module $module)
@@ -44,7 +44,7 @@ class ModuleController extends Controller
         $categories = Category::all();
         $currentCategory = $module->category;
 
-        return view('admin.modules.edit', compact('module', 'categories','currentCategory'));
+        return view('admin.modules.edit', compact('module', 'categories', 'currentCategory'));
     }
 
     public function update(Request $request, Module $module)
@@ -62,11 +62,19 @@ class ModuleController extends Controller
     }
 
 
-    public function destroy(Module $module)
+    // public function destroy(Module $module)
+    // {
+    //     $module->delete();
+
+    //     return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil dihapus');
+    // }
+
+    public function destroy($id)
     {
+        $module = Module::findOrFail($id);
         $module->delete();
 
-        return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil dihapus');
+        return redirect()->route('admin.modules.index')->with('success', 'Modul berhasil dihapus.');
     }
 
     public function massDestroy(Request $request)

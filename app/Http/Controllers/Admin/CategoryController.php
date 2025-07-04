@@ -19,22 +19,19 @@ class CategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
-    // public function create(): View
-    // {
-    //     return view('admin.categories.create');
-    // }
 
     public function create(): View
     {
-        // Ambil kategori dengan format id dan name
-        $categories = Category::pluck('name', 'id');
+        $divisions = Category::select('division')->distinct()->pluck('division');
+        $subDivisions = Category::select('subDivision')->distinct()->pluck('subDivision');
 
-        return view('admin.categories.create', compact('categories'));
+        return view('admin.categories.create', compact('divisions', 'subDivisions'));
     }
 
 
     public function store(CategoryRequest $request): RedirectResponse
     {
+
         Category::create($request->validated());
 
         return redirect()->route('admin.categories.index')->with([
@@ -68,7 +65,7 @@ class CategoryController extends Controller
         $category->delete();
 
         return back()->with([
-            'message' => 'Berhasil di hapus !',
+            'message' => 'Kategori Berhasil di hapus !',
             'alert-type' => 'danger'
         ]);
     }
@@ -83,12 +80,14 @@ class CategoryController extends Controller
     public function search(Request $request)
     {
         $term = $request->get('q');
-        $categories = \App\Models\Category::where('name', 'like', '%' . $term . '%')->get();
+
+        $categories = Category::where('subDivision', 'like', '%' . $term . '%')
+            ->get();
 
         return response()->json($categories->map(function ($cat) {
             return [
                 'id' => $cat->id,
-                'name' => $cat->name,
+                'name' => $cat->subDivision,
             ];
         }));
     }

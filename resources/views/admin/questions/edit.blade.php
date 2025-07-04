@@ -25,18 +25,11 @@
                     @csrf
                     @method('PUT')
 
-                    <!-- Question Text -->
-                    <div class="form-group">
-                        <label for="question_text">{{ __('Edit Soal Text') }}</label>
-                        <input type="text" class="form-control" id="question_text" name="question_text"
-                            value="{{ old('question_text', $question->question_text) }}" required>
-                    </div>
-
                     <!-- Category Dropdown -->
                     <div class="form-group">
-                        <label for="category_name">Ubah Nama Kategori</label>
+                        <label for="category_name">Ubah Kategori Sub Devisi</label>
                         <input type="text" id="category_name" class="form-control" placeholder="Cari kategori..."
-                            value="{{ old('category_name', isset($currentCategory) ? $currentCategory->name : '') }}"
+                            value="{{ old('category_name', isset($currentCategory) ? $currentCategory->subDivision : '') }}"
                             autocomplete="off" required>
                         <input type="hidden" name="category_id" id="category_id"
                             value="{{ old('category_id', isset($currentCategory) ? $currentCategory->id : '') }}">
@@ -46,9 +39,16 @@
                         @enderror
                     </div>
 
+                    <!-- Question Text -->
+                    <div class="form-group">
+                        <label for="question_text">{{ __('Edit Soal Text') }}</label>
+                        <input type="text" class="form-control" id="question_text" name="question_text"
+                            value="{{ old('question_text', $question->question_text) }}" required>
+                    </div>
+
                     <!-- Options Editable List -->
                     <div class="form-group">
-                        <label>{{ __('Options') }}</label>
+                        <label>{{ __('Edit Jawaban') }}</label>
                         <div id="options-wrapper">
                             @foreach ($question->options as $index => $option)
                                 <div class="input-group mb-2 option-item">

@@ -37,8 +37,10 @@ class ResultController extends Controller
         ]);
     }
 
-    public function show(Result $result): View
+    public function show($id)
     {
+        $result = Result::with(['questions.options'])->findOrFail($id);
+
         return view('admin.results.show', compact('result'));
     }
 
